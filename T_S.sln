@@ -15,11 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T_S.WIN_UI", "T_S.WIN_UI\T_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSI.Common", "PSI.Common\PSI.Common.csproj", "{9B5DF878-5807-4E9A-BE19-446B17C2C2A2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql", "Sql", "{4D882438-9A01-4DA8-8FB7-16A324E38F5E}"
-	ProjectSection(SolutionItems) = preProject
-		Students.sql = Students.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
