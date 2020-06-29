@@ -3,264 +3,273 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace T_S.DBUtility
 {
     public class SqlHelper
     {
         /// <summary>
-        /// 链接字符串
+        /// 连接字符串
         /// </summary>
         private static string connStr = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
-           
-
-      /*
-  
-        public static DataTable GetDataTable(string sql, CommandType type, params SqlParameter[] paras)
+        /// <summary>
+        /// 增、删、改的通用方法
+        /// 执行Sql语句或存储过程，返回受影响的行数
+        /// SQL注入 
+        /// </summary>
+        /// <param name="sql">sql语句或存储过程名</param>
+        /// <param name="cmdType">执行的脚本类型 1:sql语句  2:存储过程</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns></returns>
+        public static int ExecuteNonQuery(string sql, int cmdType, params SqlParameter[] parameters)
         {
-            using (SqlConnection conn = new SqlConnection(connStr))//创建连接对象
-            {
-                //创建适配器对象
-                using (SqlDataAdapter adapter = new SqlDataAdapter(sql, conn))
-                {
-                    if (paras != null)
-                    {
-                        adapter.SelectCommand.Parameters.AddRange(paras);//添加参数
-                    }
-                    adapter.SelectCommand.CommandType = type;
-                    DataTable dt = new DataTable();//构造数据表用于接收查询结果                   
-                    adapter.Fill(dt);//执行结果，fill方法内部自动打开链接，不需要conn.open();   
-                    adapter.SelectCommand.Parameters.Clear();//清空集合
-                    return dt; //返回结果集       
-                }
-            }
-        }
-        //1.ExecuteNonQuery(); : //执行命令的方法：insert update delete
-        //它的返回值类型为int型。多用于执行增加，删除，修改数据，返回受影响的行数。当select操作时，返回-1。
-        //ExecuteNonQuery()方法主要用户更新数据，通常它使用Update,Insert,Delete语句来操作数据库，
-        //其方法返回值意义：对于 Update, Insert, Delete 语句 执行成功是返回值为该命令所影响的行数，如果影响的行数为0时返回的值为0，
-        //params是关键字:是可变参数的意思，目的是省略手动构造数组的过程，直接指定对象编译器会帮助我们构造数组，并将对象加入数组中传递过来
-        public static int ExcuteNonQuery(string sql, CommandType type, params SqlParameter[] paras)
-        {
-            using (SqlConnection conn = new SqlConnection(connStr))//创建连接对象
-            {
-                using (SqlCommand cmd = new SqlCommand(sql, conn)) //创建Command连接对象
-                {
-                    if (paras != null)
-                    {
-                        cmd.Parameters.AddRange(paras);//添加参数
-                    }
-                    cmd.CommandType = type;
-                    conn.Open();//打开链接 
-                    int n = cmd.ExecuteNonQuery(); //执行命令并返回受影响的行数  
-                    cmd.Parameters.Clear();
-                    return n;
-                }
-
-            }
-        }
-
-        //ExecuteScaler(); 获取首行首列的方法
-        //它的返回值类型多位int类型。它返回的多为执行select查询。得到的返回结果为一个值的情况，比如使用count函数求表中记录个数或者使用sum函数求和等。
-        //ExecuteScalar()方法也用来执行SQL语句，但是ExecuteScalar()执行SQL语句后的返回值与ExecuteNonQuery()并不相同，
-        //ExecuteScalar()方法的返回值的数据类型是Object类型。
-        //如果执行的SQL语句是一个查询语句（SELECT），则返回结果是查询后的第一行的第一列，
-        //如果执行的SQL语句不是一个查询语句，则会返回一个未实例化的对象，必须通过类型转换来显示，
-       
-
-        public static object ExecuteScalar(string sql, CommandType type, params SqlParameter[] paras)
-        {
-            using (SqlConnection conn = new SqlConnection(connStr))//创建连接对象
-            {
-                using (SqlCommand cmd = new SqlCommand(sql, conn)) //创建Command连接对象
-                {
-                    if (paras != null)
-                    {
-                        cmd.Parameters.AddRange(paras);//添加参数
-                    }
-                    cmd.CommandType = type;
-                    conn.Open();//打开链接                    
-                    return cmd.ExecuteScalar(); ;
-                }
-
-            }
-        }*/
-        //适合增删改操作，返回影响条数
-        public static int ExecuteNonQuery(string sql, params SqlParameter[] parameters)
-        {
+            //select @@Identity 返回上一次插入记录时自动产生的ID
+            int result = 0;//返回结果
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                using (SqlCommand comm = conn.CreateCommand())
-                {
-                    try
-                    {
-                        conn.Open();
-                        comm.CommandText = sql;
-                        if (parameters != null)
-                            comm.Parameters.AddRange(parameters);
-                        return comm.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    finally
-                    {
-                        if (conn != null && conn.State != ConnectionState.Closed)
-                            conn.Close();
-                    }
-
-                }
+                //执行脚本的对象cmd
+                SqlCommand cmd = BuilderCommand(conn, sql, cmdType, null, parameters);
+                result = cmd.ExecuteNonQuery();//执行T-SQL并返回受影响行数
+                cmd.Parameters.Clear();
             }
+            //using原理：类似于try finally
+            return result;
         }
 
-        //查询操作，返回查询结果中的第一行第一列的值
-        public static object ExecuteScalar(string sql, params SqlParameter[] parameters)
+        /// <summary>
+        /// 执行sql查询，返回第一行第一列的值
+        /// </summary>
+        /// <param name="sql">sql语句或存储过程</param>
+        /// <param name="cmdType">执行的脚本类型 1:sql语句  2:存储过程</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns></returns>
+        public static object ExecuteScalar(string sql, int cmdType, params SqlParameter[] parameters)
         {
+            object result = null;//返回结果
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                using (SqlCommand comm = conn.CreateCommand())
+                //执行脚本的对象cmd
+                SqlCommand cmd = BuilderCommand(conn, sql, cmdType, null, parameters);
+                result = cmd.ExecuteScalar();//执行T-SQL并返回第一行第一列的值
+                cmd.Parameters.Clear();
+                if (result == null || result == DBNull.Value)
                 {
-                    try
-                    {
-                        conn.Open();
-                        comm.CommandText = sql;
-                        if (parameters != null)
-                            comm.Parameters.AddRange(parameters);
-                        return comm.ExecuteScalar();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    finally
-                    {
-                        if (conn != null && conn.State != ConnectionState.Closed)
-                            conn.Close();
-                    }
+                    return null;
+                }
+                else
+                {
+                    return result;
                 }
             }
         }
 
-        //Adapter调整，查询操作，返回DataTable
-        public static DataTable ExecuteDataTable(string sql, params SqlParameter[] parameters)
+        /// <summary>
+        /// 执行sql查询,返回SqlDataReader对象
+        /// </summary>
+        /// <param name="sql">sql语句或存储过程</param>
+        /// <param name="cmdType">执行的脚本类型 1:sql语句  2:存储过程</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns></returns>
+        public static SqlDataReader ExecuteReader(string sql, int cmdType, params SqlParameter[] parameters)
         {
-
-            using (SqlDataAdapter adapter = new SqlDataAdapter(sql, connStr))
+            SqlConnection conn = new SqlConnection(connStr);
+            SqlCommand cmd = BuilderCommand(conn, sql, cmdType, null, parameters);
+            SqlDataReader reader;
+            try
             {
-                DataTable dt = new DataTable();
-                if (parameters != null)
-                    adapter.SelectCommand.Parameters.AddRange(parameters);
-                adapter.Fill(dt);
-                return dt;
+                //conn.Open();
+                reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return reader;
             }
-        }
-
-        //dataset
-        public static DataSet ExecuteDataset(string sql, params SqlParameter[] parameters)
-        {
-            using (SqlDataAdapter adapter = new SqlDataAdapter(sql, connStr))
+            catch (Exception ex)
             {
-                DataSet ds = new DataSet();
-                if (parameters != null)
-                    adapter.SelectCommand.Parameters.AddRange(parameters);
-                adapter.Fill(ds);
-                return ds;
-                ////表集合
-                //DataTableCollection table = ds.Tables;
+                conn.Close();
+                throw new Exception("创建reader对象发生异常", ex);
             }
+
         }
 
-        //datareader
-        public static SqlDataReader ExecuteReader(string sqlText, params SqlParameter[] parameters)
+        /// <summary>
+        /// 执行查询，查询结果填充到DataTable 只针对查询一个表的情况
+        /// </summary>
+        /// <param name="sql">sql语句或存储过程</param>
+        /// <param name="cmdType">执行的脚本类型 1:sql语句  2:存储过程</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns></returns>
+        public static DataTable GetDataTable(string sql, int cmdType, params SqlParameter[] parameters)
         {
-            //SqlDataReader要求，它读取数据的时候有，它独占它的SqlConnection对象，而且SqlConnection必须是Open状态
-            SqlConnection conn = new SqlConnection(connStr);//不要释放连接，因为后面还需要连接打开状态
-            SqlCommand cmd = conn.CreateCommand();
-            conn.Open();
-            cmd.CommandText = sqlText;
-            if (parameters != null)
-                cmd.Parameters.AddRange(parameters);
-            //CommandBehavior.CloseConnection当SqlDataReader释放的时候，顺便把SqlConnection对象也释放掉
-            return cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            DataTable dt = null;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand cmd = BuilderCommand(conn, sql, cmdType, null, parameters);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                da.Fill(dt);
+            }
+            return dt;
         }
 
+        /// <summary>
+        /// 执行查询，数据填充到DataSet
+        /// </summary>
+        /// <param name="sql">sql语句或存储过程</param>
+        /// <param name="cmdType">执行的脚本类型 1:sql语句  2:存储过程</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(string sql, int cmdType, params SqlParameter[] parameters)
+        {
+            DataSet ds = null;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand cmd = BuilderCommand(conn, sql, cmdType, null, parameters);
+                //数据适配器
+                //conn 自动打开  断开式连接
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                ds = new DataSet();
+                da.Fill(ds);
+                //自动关闭conn
+            }
+            return ds;
+        }
 
-        /// <summary> 
-        /// 执行多条SQL语句，实现数据库事务。 
-        /// </summary> 
-        /// <param name="SQLStringList">多条SQL语句</param>      
-        public static int ExecuteSqlTran(List<String> SQLStringList)
+        /// <summary>
+        /// 事务 执行批量sql
+        /// </summary>
+        /// <param name="listSql"></param>
+        /// <returns></returns>
+        public static bool ExecuteTrans(List<string> listSql)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = conn;
-                SqlTransaction tx = conn.BeginTransaction();
-                cmd.Transaction = tx;
+                SqlTransaction trans = conn.BeginTransaction();
+                SqlCommand cmd = BuilderCommand(conn, "", 1, trans);
                 try
                 {
                     int count = 0;
-                    for (int n = 0; n < SQLStringList.Count; n++)
+                    for (int i = 0; i < listSql.Count; i++)
                     {
-                        string strsql = SQLStringList[n];
-                        if (strsql.Trim().Length > 1)
+                        if (listSql[i].Length > 0)
                         {
-                            cmd.CommandText = strsql;
+                            cmd.CommandText = listSql[i];
+                            cmd.CommandType = CommandType.Text;
                             count += cmd.ExecuteNonQuery();
                         }
                     }
-                    tx.Commit();
-                    return count;
+                    trans.Commit();
+                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    tx.Rollback();
-                    return 0;
+                    trans.Rollback();
+                    throw new Exception("执行事务出现异常", ex);
                 }
             }
         }
 
-        /// <summary> 
-        /// 执行存储过程，返回SqlDataReader ( 注意：调用该方法后，一定要对SqlDataReader进行Close ) 
-        /// </summary> 
-        /// <param name="storedProcName">存储过程名</param> 
-        /// <param name="parameters">存储过程参数</param> 
-        /// <returns>SqlDataReader</returns> 
-        public static SqlDataReader RunProcedure(string storedProcName, IDataParameter[] parameters)
+        /// <summary>
+        /// 事务 批量执行 CommandInfo 包括sql,脚本类型，参数列表
+        /// </summary>
+        /// <param name="comList"></param>
+        /// <returns></returns>
+        public static bool ExecuteTrans(List<CommandInfo> comList)
         {
-            SqlConnection connection = new SqlConnection(connStr);
-            SqlDataReader returnReader;
-            connection.Open();
-            SqlCommand command = BuildQueryCommand(connection, storedProcName, parameters);
-            command.CommandType = CommandType.StoredProcedure;
-            returnReader = command.ExecuteReader(CommandBehavior.CloseConnection);
-            return returnReader;
-
-        }
-        private static SqlCommand BuildQueryCommand(SqlConnection connection, string storedProcName, IDataParameter[] parameters)
-        {
-            SqlCommand command = new SqlCommand(storedProcName, connection);
-            command.CommandType = CommandType.StoredProcedure;
-            foreach (SqlParameter parameter in parameters)
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                if (parameter != null)
+                conn.Open();
+                SqlTransaction trans = conn.BeginTransaction();
+                SqlCommand cmd = BuilderCommand(conn, "", 1, trans);
+                try
                 {
-                    // 检查未分配值的输出参数,将其分配以DBNull.Value. 
-                    if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                        (parameter.Value == null))
+                    int count = 0;
+                    for (int i = 0; i < comList.Count; i++)
                     {
-                        parameter.Value = DBNull.Value;
+                        cmd.CommandText = comList[i].CommandText;
+
+                        if (comList[i].IsProc)
+                            cmd.CommandType = CommandType.StoredProcedure;
+                        else
+                            cmd.CommandType = CommandType.Text;
+
+                        if (comList[i].Paras!=null && comList[i].Paras.Length > 0)
+                        {
+                            cmd.Parameters.Clear();
+                            foreach (var p in comList[i].Paras)
+                            {
+                                cmd.Parameters.Add(p);
+                            }
+                        }
+                        count += cmd.ExecuteNonQuery();
+
                     }
-                    command.Parameters.Add(parameter);
+                    trans.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    throw new Exception("执行事务出现异常", ex);
                 }
             }
+        }
 
+        //public static T ExecuteSql<T>(string sql, int cmdType, DbParameter[] paras, Func<IDbCommand, T> action)
+        //{
+        //    using (DbConnection conn = new SqlConnection(connStr))
+        //    {
+        //        conn.Open();
+        //        IDbCommand cmd = conn.CreateCommand();
+        //        cmd.CommandText = sql;
+        //        if (cmdType==2)
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //        return action(cmd);
+        //    }
+        //}
+
+        public static T ExecuteTrans<T>(Func<IDbCommand, T> action)
+        {
+            using (IDbConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                IDbTransaction trans = conn.BeginTransaction();
+                IDbCommand cmd = conn.CreateCommand();
+                cmd.Transaction = trans;
+                return action(cmd);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 构建SqlCommand
+        /// </summary>
+        /// <param name="conn">数据库连接对象</param>
+        /// <param name="sql">SQL语句或存储过程</param>
+        /// <param name="comType">命令字符串的类型</param>
+        /// <param name="trans">事务</param>
+        /// <param name="paras">参数数组</param>
+        /// <returns></returns>
+        private static SqlCommand BuilderCommand(SqlConnection conn, string sql, int cmdType, SqlTransaction trans, params SqlParameter[] paras)
+        {
+            if (conn == null) throw new ArgumentNullException("连接对象不能为空！");
+            SqlCommand command = new SqlCommand(sql, conn);
+            if (cmdType == 2)
+                command.CommandType = CommandType.StoredProcedure;
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            if (trans != null)
+                command.Transaction = trans;
+            if (paras != null && paras.Length > 0)
+            {
+                command.Parameters.Clear();
+                command.Parameters.AddRange(paras);
+            }
             return command;
         }
-
-
 
     }
 }

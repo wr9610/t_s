@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>T_S.DAL</RootNamespace>
     <AssemblyName>T_S.DAL</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,13 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDAL.cs" />
+    <Compile Include="BQuery.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="CreateSql.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\T_S.Common\T_S.Common.csproj">
-      <Project>{e0def3ae-b532-474a-93e2-0a6806a63335}</Project>
-      <Name>T_S.Common</Name>
+    <ProjectReference Include="..\PSI.Common\PSI.Common.csproj">
+      <Project>{9b5df878-5807-4e9a-be19-446b17c2c2a2}</Project>
+      <Name>PSI.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\T_S.DBUtility\T_S.DBUtility.csproj">
       <Project>{140e2092-aae6-4740-b4fa-874baacd8c4d}</Project>

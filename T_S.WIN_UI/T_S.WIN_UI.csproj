@@ -76,5 +76,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PSI.Common\PSI.Common.csproj">
+      <Project>{9b5df878-5807-4e9a-be19-446b17c2c2a2}</Project>
+      <Name>PSI.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

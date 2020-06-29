@@ -5,7 +5,7 @@ using System.Text;
 
 namespace T_S.Common
 {
-    public class Class1
+    class TableAttribute
     {
     }
 }

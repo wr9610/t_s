@@ -40,13 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseBLL.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\T_S.Common\T_S.Common.csproj">
-      <Project>{e0def3ae-b532-474a-93e2-0a6806a63335}</Project>
-      <Name>T_S.Common</Name>
+    <ProjectReference Include="..\PSI.Common\PSI.Common.csproj">
+      <Project>{9b5df878-5807-4e9a-be19-446b17c2c2a2}</Project>
+      <Name>PSI.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\T_S.DAL\T_S.DAL.csproj">
       <Project>{6fb53971-e563-4d69-958d-805cab8c8f24}</Project>
