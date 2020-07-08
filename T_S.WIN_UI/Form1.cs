@@ -22,6 +22,7 @@ namespace T_S.WIN_UI
             InitializeComponent();
             Txt_Name.Clear();
             Txt_Psw.Clear();
+            skinEngine1.SkinFile = System.Environment.CurrentDirectory + "\\Skins\\MidsummerColor1.ssk";  //皮肤文件以 .ssk结尾
         }
         /// <summary>
         /// 登录

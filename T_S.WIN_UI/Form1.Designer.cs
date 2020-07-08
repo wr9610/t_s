@@ -30,12 +30,13 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.Txt_Name = new System.Windows.Forms.TextBox();
-            this.Txt_Psw = new System.Windows.Forms.TextBox();
-            this.btn_login = new System.Windows.Forms.Button();
             this.Btn_clo = new System.Windows.Forms.Button();
+            this.btn_login = new System.Windows.Forms.Button();
+            this.Txt_Psw = new System.Windows.Forms.TextBox();
+            this.Txt_Name = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,38 +66,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录";
             // 
-            // label2
+            // Btn_clo
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(37, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 19);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "账号";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(37, 96);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 19);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "密码";
-            // 
-            // Txt_Name
-            // 
-            this.Txt_Name.Location = new System.Drawing.Point(90, 47);
-            this.Txt_Name.Name = "Txt_Name";
-            this.Txt_Name.Size = new System.Drawing.Size(165, 29);
-            this.Txt_Name.TabIndex = 2;
-            // 
-            // Txt_Psw
-            // 
-            this.Txt_Psw.Location = new System.Drawing.Point(90, 93);
-            this.Txt_Psw.Name = "Txt_Psw";
-            this.Txt_Psw.PasswordChar = '*';
-            this.Txt_Psw.Size = new System.Drawing.Size(165, 29);
-            this.Txt_Psw.TabIndex = 3;
+            this.Btn_clo.Location = new System.Drawing.Point(208, 151);
+            this.Btn_clo.Name = "Btn_clo";
+            this.Btn_clo.Size = new System.Drawing.Size(75, 32);
+            this.Btn_clo.TabIndex = 5;
+            this.Btn_clo.Text = "取消";
+            this.Btn_clo.UseVisualStyleBackColor = true;
             // 
             // btn_login
             // 
@@ -108,14 +85,47 @@
             this.btn_login.UseVisualStyleBackColor = true;
             this.btn_login.Click += new System.EventHandler(this.btn_login_Click);
             // 
-            // Btn_clo
+            // Txt_Psw
             // 
-            this.Btn_clo.Location = new System.Drawing.Point(208, 151);
-            this.Btn_clo.Name = "Btn_clo";
-            this.Btn_clo.Size = new System.Drawing.Size(75, 32);
-            this.Btn_clo.TabIndex = 5;
-            this.Btn_clo.Text = "取消";
-            this.Btn_clo.UseVisualStyleBackColor = true;
+            this.Txt_Psw.Location = new System.Drawing.Point(90, 93);
+            this.Txt_Psw.Name = "Txt_Psw";
+            this.Txt_Psw.PasswordChar = '*';
+            this.Txt_Psw.Size = new System.Drawing.Size(165, 29);
+            this.Txt_Psw.TabIndex = 3;
+            // 
+            // Txt_Name
+            // 
+            this.Txt_Name.Location = new System.Drawing.Point(90, 47);
+            this.Txt_Name.Name = "Txt_Name";
+            this.Txt_Name.Size = new System.Drawing.Size(165, 29);
+            this.Txt_Name.TabIndex = 2;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(37, 96);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(47, 19);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "密码";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(37, 50);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 19);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "账号";
+            // 
+            // skinEngine1
+            // 
+            this.skinEngine1.@__DrawButtonFocusRectangle = true;
+            this.skinEngine1.DisabledButtonTextColor = System.Drawing.Color.Gray;
+            this.skinEngine1.DisabledMenuFontColor = System.Drawing.SystemColors.GrayText;
+            this.skinEngine1.InactiveCaptionColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.skinEngine1.SerialNumber = "";
+            this.skinEngine1.SkinFile = null;
             // 
             // Form1
             // 
@@ -143,6 +153,7 @@
         private System.Windows.Forms.TextBox Txt_Name;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private Sunisoft.IrisSkin.SkinEngine skinEngine1;
     }
 }
 

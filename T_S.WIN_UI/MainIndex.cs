@@ -15,6 +15,13 @@ namespace T_S.WIN_UI
         public MainIndex()
         {
             InitializeComponent();
+            skinEngine1.SkinFile = System.Environment.CurrentDirectory + "\\Skins\\Calmness.ssk";  //皮肤文件以 .ssk结尾
+        }
+
+        private void MainIndex_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Form1 form1=new Form1();
+            form1.Close();
         }
     }
 }
