@@ -10,7 +10,7 @@ namespace T_S.MODEL.DModel
     [PrimaryKey("Stu_ID")]
     public class Students
     {
-        public string Stu_ID  { get; set; }
+        public int Stu_ID  { get; set; }
         public string Name { get; set; }
         public string Student_Number { get; set; }
         public string Psw { get; set; }

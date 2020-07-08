@@ -1,8 +1,8 @@
 CREATE TABLE [RoleStudentInfo]
 ( 
 [RS_ID] int identity(1,1) PRIMARY KEY,    -- 主键
-[RO_ID] CHAR(36) ,        -- 角色id
-[STU_ID]  CHAR(36), --学生id
+[RO_ID] int ,        -- 角色id
+[STU_ID]  int, --学生id
 [CreateTime] date NOT NULL DEFAULT (N'sysdate'),  --创建时间
 foreign key([RO_ID] ) references [Role](R_ID ),
 foreign key([STU_ID] ) references [Students](Stu_ID )

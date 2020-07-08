@@ -52,6 +52,13 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainIndex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainIndex.Designer.cs">
+      <DependentUpon>MainIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MODEL\LoginModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -84,6 +91,15 @@
       <Project>{9b5df878-5807-4e9a-be19-446b17c2c2a2}</Project>
       <Name>PSI.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\T_S.BLL\T_S.BLL.csproj">
+      <Project>{3ABAF792-9CEE-4B1C-B256-1DEC89E937C6}</Project>
+      <Name>T_S.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T_S.MODEL\T_S.MODEL.csproj">
+      <Project>{DEE925A6-2BD9-4E25-BB1B-7581C0413957}</Project>
+      <Name>T_S.MODEL</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

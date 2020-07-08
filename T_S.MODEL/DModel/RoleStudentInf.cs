@@ -14,7 +14,7 @@ namespace T_S.MODEL.DModel
     [PrimaryKey("RMId")]
     public class RoleStudentInf
     {
-        public string RS_ID { get; set; }
+        public int RS_ID { get; set; }
         public string RO_ID { get; set; }
         public string STU_ID { get; set; }
         public DateTime CreateTime { get; set; }

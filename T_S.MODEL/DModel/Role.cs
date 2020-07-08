@@ -14,7 +14,7 @@ namespace T_S.MODEL.DModel
     [PrimaryKey("R_ID")]
     public class Role
     {
-        public string R_ID { get; set; }
+        public int R_ID { get; set; }
         public string RoleName { get; set; }
         public string Remark { get; set; }
         public DateTime CreateTime { get; set; }

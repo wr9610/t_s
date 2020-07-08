@@ -8,9 +8,9 @@ using T_S.MODEL.DModel;
 
 namespace T_S.DAL
 {
-    public class Login:BaseDAL<Students>
+    public class LoginDAL:BaseDAL<Students>
     {
-        public string Log(string n, string p) 
+        public int Log(string n, string p) 
         {
             string where = "Student_Number=@Name and Psw=@Psw";
             SqlParameter[] parameters =
@@ -23,7 +23,7 @@ namespace T_S.DAL
             if (students != null)
                 return students.Stu_ID;
             else
-                return "0";
+                return 0;
            
         }
     }
