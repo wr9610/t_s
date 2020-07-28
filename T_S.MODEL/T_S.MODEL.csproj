@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DModel\Menu.cs" />
     <Compile Include="DModel\Role.cs" />
+    <Compile Include="DModel\RoleMenuInfo.cs" />
     <Compile Include="DModel\RoleStudentInf.cs" />
     <Compile Include="DModel\Students.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

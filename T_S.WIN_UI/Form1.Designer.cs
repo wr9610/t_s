@@ -36,7 +36,6 @@
             this.Txt_Name = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,15 +117,6 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "账号";
             // 
-            // skinEngine1
-            // 
-            this.skinEngine1.@__DrawButtonFocusRectangle = true;
-            this.skinEngine1.DisabledButtonTextColor = System.Drawing.Color.Gray;
-            this.skinEngine1.DisabledMenuFontColor = System.Drawing.SystemColors.GrayText;
-            this.skinEngine1.InactiveCaptionColor = System.Drawing.SystemColors.InactiveCaptionText;
-            this.skinEngine1.SerialNumber = "";
-            this.skinEngine1.SkinFile = null;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -153,7 +143,6 @@
         private System.Windows.Forms.TextBox Txt_Name;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private Sunisoft.IrisSkin.SkinEngine skinEngine1;
     }
 }
 

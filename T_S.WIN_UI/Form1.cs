@@ -22,7 +22,7 @@ namespace T_S.WIN_UI
             InitializeComponent();
             Txt_Name.Clear();
             Txt_Psw.Clear();
-            skinEngine1.SkinFile = System.Environment.CurrentDirectory + "\\Skins\\MidsummerColor1.ssk";  //皮肤文件以 .ssk结尾
+            //skinEngine1.SkinFile = System.Environment.CurrentDirectory + "\\Skins\\MidsummerColor1.ssk";  //皮肤文件以 .ssk结尾
         }
         /// <summary>
         /// 登录
@@ -35,37 +35,48 @@ namespace T_S.WIN_UI
             string Psw = Txt_Psw.Text.Trim();
             if (string.IsNullOrEmpty(Name))
             {
-                MsgBoxHelper.MsgErrorShow("账号为空请确认后再试");
+                MsgBoxHelper.MsgErrorShow("账号为空");
                 Txt_Name.Focus();
                 return;
             }
             if (string.IsNullOrEmpty(Psw))
             {
-                MsgBoxHelper.MsgErrorShow("密码为空请确认后再试");
+                MsgBoxHelper.MsgErrorShow("密码为空");
                 Txt_Psw.Focus();
                 return;
             }
            string enPSW= MD5Encrypt.Encrypt(Psw);
-            LoginBLL login=new LoginBLL();
-            List<View_StndentRole> StuList = login.Login(Name, enPSW);
-            if (StuList==null||StuList.Count==0)
+            try
             {
-                MsgBoxHelper.MsgErrorShow("账号或密码错误");
-                return;
-            }
-            else
-            {
-               
-                MainIndex index=new MainIndex();
-                index.Tag = new LoginModel()
+                LoginBLL login = new LoginBLL();
+                List<View_StndentRole> StuList = login.Login(Name, enPSW);
+                if (StuList == null || StuList.Count == 0)
                 {
-                    StuList = StuList,
-                    LoginForm1 = this
-                };
-                index.Show();
-                this.Hide();
+                  
+                    MsgBoxHelper.MsgErrorShow("账号或密码错误");
+                    return;
+                }
+                else
+                {
 
+                    MainIndex index = new MainIndex();
+                    index.Tag = new LoginModel()
+                    {
+                        StuList = StuList,
+                        LoginForm1 = this
+                    };
+                    index.Show();
+                    this.Hide();
+
+                }
             }
+            catch (Exception exception)
+            {
+                MsgBoxHelper.MsgErrorShow("登录出现错误");
+            }
+                
+
+          
         }
     }
 }
